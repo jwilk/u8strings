@@ -123,7 +123,13 @@ int main(int argc, char **argv)
             char *endptr;
             errno = 0;
             limit = strtol(optarg, &endptr, 10);
-            if ((errno != 0) || (limit <= 0) || ((unsigned long)limit > SIZE_MAX / 4)) {
+            if (limit <= 0)
+                errno = ERANGE;
+            else if ((unsigned long)limit > SIZE_MAX / 4)
+                errno = ERANGE;
+            else if (*endptr != '\0')
+                errno = EINVAL;
+            if (errno != 0) {
                 fprintf(stderr, "%s: invalid minimum string length %s\n", progname, optarg);
                 exit(1);
             }
