@@ -114,8 +114,7 @@ error:
     fprintf(stderr, "%s: %s: %s\n", progname, path, strerror(errno));
     if (fp != NULL)
         fclose(fp); /* ignore errors */
-    if (buffer != NULL)
-        free(buffer);
+    free(buffer);
     return 1;
 }
 
