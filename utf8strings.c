@@ -72,11 +72,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
         fp = fopen(path, "rb");
     if (fp == NULL)
         goto error;
-    if (radix) {
-        format[2] = radix;
-    } else {
-        format[0] = '\0';
-    }
+    format[2] = radix;
     offset = 0;
     while (1) {
         if (radix && ++offset == 0) {
@@ -117,7 +113,8 @@ static int extract_strings(const char *path, size_t limit, char radix)
             if (nchars >= limit) {
                 if (new) {
                     new = 0;
-                    printf(format, offset - nbytes);
+                    if (radix)
+                        printf(format, offset - nbytes);
                 }
                 fwrite(buffer, nbytes, 1, stdout);
                 nbytes = 0;
