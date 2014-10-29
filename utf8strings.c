@@ -20,11 +20,13 @@
  * IN THE SOFTWARE.
  */
 
+#include <assert.h>
 #include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /* Flexible and Economical UTF-8 Decoder
  * http://bjoern.hoehrmann.de/utf-8/decoder/dfa/
@@ -54,10 +56,7 @@ int extract_strings(const char *path, size_t limit)
     size_t nbytes = 0;
     size_t nchars = 0;
     char *buffer = NULL;
-    if (limit > SIZE_MAX / 4) {
-        errno = ENOMEM;
-        goto error;
-    }
+    assert(limit <= SIZE_MAX / 4); /* no overflow */
     buffer = malloc(limit * 4);
     if (buffer == NULL)
         goto error;
@@ -114,10 +113,32 @@ error:
 
 int main(int argc, char **argv)
 {
+    int opt;
+    long limit = 4;
+    while ((opt = getopt(argc, argv, "an:t:")) != -1)
+    switch (opt) {
+        case 'n': {
+            char *endptr;
+            errno = 0;
+            limit = strtol(optarg, &endptr, 10);
+            if ((errno != 0) || (limit <= 0) || ((unsigned long)limit > SIZE_MAX / 4)) {
+                fprintf(stderr, "utf8strings: invalid minimum string length %s\n", optarg);
+                exit(1);
+            }
+            break;
+        }
+        case 't':
+            /* TODO */
+            fprintf(stderr, "utf8strings: -t is not implemented yet\n");
+            exit(1);
+        default:
+            fprintf(stderr, "utf8strings: [-a] [-t FORMAT] [-n LENGTH] FILE...\n");
+            exit(1);
+    }
     int i;
     int rc = 0;
-    for (i = 1; i < argc; i++) {
-        rc |= extract_strings(argv[i], 4);
+    for (i = optind; i < argc; i++) {
+        rc |= extract_strings(argv[i], limit);
     }
     return rc;
 }
