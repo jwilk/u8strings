@@ -51,14 +51,17 @@ static const uint8_t utf8d[] = {
     1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1, /* s7..s8 */
 };
 
-static int extract_strings(const char *path, size_t limit)
+static int extract_strings(const char *path, size_t limit, char radix)
 {
     FILE *fp = NULL;
+    uintmax_t offset = 0;
     uint32_t state = 0;
     uint32_t codep = 0;
     size_t nbytes = 0;
     size_t nchars = 0;
+    int new = 1;
     char *buffer = NULL;
+    char format[] = "%jX ";
     assert(limit <= SIZE_MAX / 4); /* no overflow */
     buffer = malloc(limit * 4);
     if (buffer == NULL)
@@ -69,7 +72,17 @@ static int extract_strings(const char *path, size_t limit)
         fp = fopen(path, "rb");
     if (fp == NULL)
         goto error;
+    if (radix) {
+        format[2] = radix;
+    } else {
+        format[0] = '\0';
+    }
+    offset = (uintmax_t) -1;
     while (1) {
+        if (radix && ++offset == (uintmax_t) -1) {
+            errno = EFBIG;
+            goto error;
+        }
         int byte = fgetc(fp);
         if (byte == EOF) {
             if (ferror(fp))
@@ -93,6 +106,7 @@ static int extract_strings(const char *path, size_t limit)
             if (nchars >= limit)
                 fputc('\n', stdout);
             nbytes = nchars = 0;
+            new = 1;
             state = 0;
             continue;
         }
@@ -100,6 +114,10 @@ static int extract_strings(const char *path, size_t limit)
         if (state == 0) {
             nchars++;
             if (nchars >= limit) {
+                if (new) {
+                    new = 0;
+                    printf(format, offset);
+                }
                 fwrite(buffer, nbytes, 1, stdout);
                 nbytes = 0;
                 nchars = limit; /* avoid integer overflow */
@@ -122,6 +140,7 @@ int main(int argc, char **argv)
 {
     int opt;
     long limit = 4;
+    char radix = '\0';
     while ((opt = getopt(argc, argv, "an:t:")) != -1)
     switch (opt) {
         case 'n': {
@@ -141,9 +160,24 @@ int main(int argc, char **argv)
             break;
         }
         case 't':
-            /* TODO */
-            fprintf(stderr, "%s: -t is not implemented yet\n", progname);
-            exit(1);
+            printf("%d %d\n", optarg[0], optarg[1]);
+            switch (optarg[0]) {
+                case 'o':
+                case 'x':
+                case 'd':
+                    if (optarg[1])
+                        radix = '\0';
+                    else
+                        radix = optarg[0];
+                    break;
+                default:
+                    radix = '\0';
+            }
+            if (!radix) {
+                fprintf(stderr, "%s: invalid radix: %s\n", progname, optarg);
+                exit(1);
+            }
+            break;
         default:
             fprintf(stderr, "%s: [-a] [-t FORMAT] [-n LENGTH] [FILE...]\n", progname);
             exit(1);
@@ -151,10 +185,10 @@ int main(int argc, char **argv)
     int i;
     int rc = 0;
     for (i = optind; i < argc; i++) {
-        rc |= extract_strings(argv[i], limit);
+        rc |= extract_strings(argv[i], limit, radix);
     }
     if (optind >= argc) {
-        rc |= extract_strings(NULL, limit);
+        rc |= extract_strings(NULL, limit, radix);
     }
     return rc;
 }
