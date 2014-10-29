@@ -28,6 +28,8 @@
 #include <string.h>
 #include <unistd.h>
 
+const char * progname = "utf8strings";
+
 /* Flexible and Economical UTF-8 Decoder
  * http://bjoern.hoehrmann.de/utf-8/decoder/dfa/
  */
@@ -105,7 +107,7 @@ static int extract_strings(const char *path, size_t limit)
     free(buffer);
     return 0;
 error:
-    fprintf(stderr, "utf8strings: %s: %s\n", path, strerror(errno));
+    fprintf(stderr, "%s: %s: %s\n", progname, path, strerror(errno));
     if (buffer != NULL)
         free(buffer);
     return 1;
@@ -122,17 +124,17 @@ int main(int argc, char **argv)
             errno = 0;
             limit = strtol(optarg, &endptr, 10);
             if ((errno != 0) || (limit <= 0) || ((unsigned long)limit > SIZE_MAX / 4)) {
-                fprintf(stderr, "utf8strings: invalid minimum string length %s\n", optarg);
+                fprintf(stderr, "%s: invalid minimum string length %s\n", progname, optarg);
                 exit(1);
             }
             break;
         }
         case 't':
             /* TODO */
-            fprintf(stderr, "utf8strings: -t is not implemented yet\n");
+            fprintf(stderr, "%s: -t is not implemented yet\n", progname);
             exit(1);
         default:
-            fprintf(stderr, "utf8strings: [-a] [-t FORMAT] [-n LENGTH] FILE...\n");
+            fprintf(stderr, "%s: [-a] [-t FORMAT] [-n LENGTH] FILE...\n", progname);
             exit(1);
     }
     int i;
