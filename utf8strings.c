@@ -77,9 +77,9 @@ static int extract_strings(const char *path, size_t limit, char radix)
     } else {
         format[0] = '\0';
     }
-    offset = (uintmax_t) -1;
+    offset = 0;
     while (1) {
-        if (radix && ++offset == (uintmax_t) -1) {
+        if (radix && ++offset == 0) {
             errno = EFBIG;
             goto error;
         }
@@ -117,7 +117,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
             if (nchars >= limit) {
                 if (new) {
                     new = 0;
-                    printf(format, offset);
+                    printf(format, offset - nbytes);
                 }
                 fwrite(buffer, nbytes, 1, stdout);
                 nbytes = 0;
