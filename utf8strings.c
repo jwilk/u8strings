@@ -74,7 +74,7 @@ int extract_strings(const char *path, size_t limit)
         uint32_t type = utf8d[byte];
         codep = (state != 0) ?
           (byte & 0x3FU) | (codep << 6) :
-          (0xFF >> type) & (byte);
+          (0xFFU >> type) & (byte);
         state = utf8d[256 + state * 16 + type];
         if (state == 0) { /* ACCEPT */
             if (codep == '\t')
