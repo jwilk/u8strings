@@ -53,6 +53,7 @@ static const uint8_t utf8d[] = {
 
 static int extract_strings(const char *path, size_t limit)
 {
+    FILE *fp = NULL;
     uint32_t state = 0;
     uint32_t codep = 0;
     size_t nbytes = 0;
@@ -62,7 +63,10 @@ static int extract_strings(const char *path, size_t limit)
     buffer = malloc(limit * 4);
     if (buffer == NULL)
         goto error;
-    FILE *fp = fopen(path, "rb");
+    if (path == NULL)
+        fp = stdin;
+    else
+        fp = fopen(path, "rb");
     if (fp == NULL)
         goto error;
     while (1) {
@@ -140,13 +144,16 @@ int main(int argc, char **argv)
             fprintf(stderr, "%s: -t is not implemented yet\n", progname);
             exit(1);
         default:
-            fprintf(stderr, "%s: [-a] [-t FORMAT] [-n LENGTH] FILE...\n", progname);
+            fprintf(stderr, "%s: [-a] [-t FORMAT] [-n LENGTH] [FILE...]\n", progname);
             exit(1);
     }
     int i;
     int rc = 0;
     for (i = optind; i < argc; i++) {
         rc |= extract_strings(argv[i], limit);
+    }
+    if (optind >= argc) {
+        rc |= extract_strings(NULL, limit);
     }
     return rc;
 }
