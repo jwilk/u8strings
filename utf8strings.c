@@ -49,7 +49,7 @@ static const uint8_t utf8d[] = {
     1,3,1,1,1,1,1,3,1,3,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1, // s7..s8
 };
 
-int extract_strings(const char *path, size_t limit)
+static int extract_strings(const char *path, size_t limit)
 {
     uint32_t state = 0;
     uint32_t codep = 0;
