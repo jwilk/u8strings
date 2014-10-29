@@ -1,5 +1,5 @@
 CFLAGS ?= -g -O2
-CFLAGS += -Wall 
+CFLAGS += -Wextra -Wall
 CFLAGS += $(shell getconf LFS_CFLAGS)
 
 .PHONY: all
