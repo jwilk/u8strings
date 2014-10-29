@@ -144,6 +144,8 @@ int main(int argc, char **argv)
     char radix = '\0';
     while ((opt = getopt(argc, argv, "an:t:")) != -1)
     switch (opt) {
+        case 'a':
+            break;
         case 'n': {
             char *endptr;
             errno = 0;
