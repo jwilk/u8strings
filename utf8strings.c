@@ -190,7 +190,7 @@ int main(int argc, char **argv)
     if (optind >= argc) {
         rc |= extract_strings(NULL, (size_t) limit, radix);
     }
-    if (fclose(stdout) < 0) {
+    if (fclose(stdout) == EOF) {
         fprintf(stderr, "%s: %s\n", progname, strerror(errno));
         exit(1);
     }
