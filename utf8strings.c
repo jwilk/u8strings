@@ -112,6 +112,8 @@ static int extract_strings(const char *path, size_t limit)
     return 0;
 error:
     fprintf(stderr, "%s: %s: %s\n", progname, path, strerror(errno));
+    if (fp != NULL)
+        fclose(fp); /* ignore errors */
     if (buffer != NULL)
         free(buffer);
     return 1;
