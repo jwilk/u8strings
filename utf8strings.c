@@ -34,7 +34,7 @@ const char * progname = "utf8strings";
  * http://bjoern.hoehrmann.de/utf-8/decoder/dfa/
  */
 
-static const uint8_t utf8d[] = {
+static const unsigned char utf8d[] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 00..1f */
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 20..3f */
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 40..5f */
@@ -55,8 +55,8 @@ static int extract_strings(const char *path, size_t limit, char radix)
 {
     FILE *fp = NULL;
     uintmax_t offset = 0;
-    uint32_t state = 0;
-    uint32_t codep = 0;
+    unsigned int state = 0;
+    unsigned int codep = 0;
     size_t nbytes = 0;
     size_t nchars = 0;
     int new = 1;
@@ -89,7 +89,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
                 goto error;
             break;
         }
-        uint32_t type = utf8d[byte];
+        unsigned int type = utf8d[byte];
         codep = (state != 0) ?
           (byte & 0x3FU) | (codep << 6) :
           (0xFFU >> type) & (byte);
