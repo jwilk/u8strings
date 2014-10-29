@@ -89,10 +89,11 @@ static int extract_strings(const char *path, size_t limit, char radix)
                 goto error;
             break;
         }
+        unsigned int ubyte = (unsigned int) byte;
         unsigned int type = utf8d[byte];
         codep = (state != 0) ?
-          (byte & 0x3FU) | (codep << 6) :
-          (0xFFU >> type) & (byte);
+          (ubyte & 0x3FU) | (codep << 6) :
+          (0xFFU >> type) & ubyte;
         state = utf8d[256 + state * 16 + type];
         if (state == 0) { /* ACCEPT */
             if (codep == '\t')
@@ -110,7 +111,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
             state = 0;
             continue;
         }
-        buffer[nbytes++] = byte;
+        buffer[nbytes++] = (char) byte;
         if (state == 0) {
             nchars++;
             if (nchars >= limit) {
@@ -185,10 +186,10 @@ int main(int argc, char **argv)
     int i;
     int rc = 0;
     for (i = optind; i < argc; i++) {
-        rc |= extract_strings(argv[i], limit, radix);
+        rc |= extract_strings(argv[i], (size_t) limit, radix);
     }
     if (optind >= argc) {
-        rc |= extract_strings(NULL, limit, radix);
+        rc |= extract_strings(NULL, (size_t) limit, radix);
     }
     return rc;
 }
