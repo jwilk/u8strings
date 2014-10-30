@@ -3,10 +3,10 @@ CFLAGS += -Wall -Wextra -Wconversion
 CFLAGS += $(shell getconf LFS_CFLAGS)
 
 .PHONY: all
-all: utf8strings
+all: u8strings
 
 .PHONY: clean
 clean:
-	rm -f utf8strings
+	rm -f u8strings
 
 # vim:ts=4 sts=4 sw=4 noet
