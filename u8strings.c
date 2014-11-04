@@ -125,6 +125,8 @@ static int extract_strings(const char *path, size_t limit, char radix)
             }
         }
     }
+    if (nchars >= limit)
+        fputc('\n', stdout);
     if (fclose(fp) == EOF)
         goto error;
     free(buffer);
