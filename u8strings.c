@@ -111,7 +111,8 @@ static int extract_strings(const char *path, size_t limit, char radix)
         if (byte == EOF) {
             if (ferror(fp))
                 goto error;
-            break;
+            if (feof(fp))
+                break;
         }
         unsigned int ubyte = (unsigned int) byte;
         unsigned int type = utf8d[byte];
