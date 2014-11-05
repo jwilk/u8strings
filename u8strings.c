@@ -127,6 +127,10 @@ static int extract_strings(const char *path, size_t limit, char radix)
                 fputc('\n', stdout);
             nbytes = nchars = 0;
             new = 1;
+            /* This wasn't a continuation byte.
+             * But maybe it starts a new character.
+             * Let's try to resynchronize.
+             */
             codep = ubyte & bitmask;
             state = utf8t[type];
             if ((state == UTF8_ACCEPT) && !is_printable(codep))
