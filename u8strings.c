@@ -65,6 +65,17 @@ static const unsigned char utf8t[] = {
     1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* state = 8 */
 };
 
+static int is_printable(unsigned int codep)
+{
+    if (codep == '\t')
+        return 1;
+    if (codep < 0x20)
+        return 0;
+    if ((codep >= 0x7F) && (codep < 0xA0))
+        return 0;
+    return 1;
+}
+
 static int extract_strings(const char *path, size_t limit, char radix)
 {
     FILE *fp = NULL;
@@ -106,11 +117,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
           (0xFFU >> type) & ubyte;
         state = utf8t[state * 16 + type];
         if (state == 0) { /* ACCEPT */
-            if (codep == '\t')
-                ;
-            else if (codep < 0x20)
-                state = 1;
-            else if ((codep >= 0x7F) && (codep < 0xA0))
+            if (!is_printable(codep))
                 state = 1;
         }
         if (state == 1) { /* REJECT */
@@ -118,6 +125,12 @@ static int extract_strings(const char *path, size_t limit, char radix)
                 fputc('\n', stdout);
             nbytes = nchars = 0;
             new = 1;
+            codep = (0xFFU >> type) & ubyte;
+            state = utf8t[type];
+            if ((state == 0) && !is_printable(codep))
+                state = 1;
+        }
+        if (state == 1) { /* still REJECT */
             state = 0;
             continue;
         }
