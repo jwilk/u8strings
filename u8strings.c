@@ -34,6 +34,9 @@ const char * progname = "u8strings";
  * http://bjoern.hoehrmann.de/utf-8/decoder/dfa/
  */
 
+#define UTF8_ACCEPT 0
+#define UTF8_REJECT 1
+
 static const unsigned char utf8d[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* byte = 0x00 .. 0x0F */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* byte = 0x10 .. 0x1F */
@@ -54,8 +57,8 @@ static const unsigned char utf8d[] = {
 };
 
 static const unsigned char utf8t[] = {
-    0, 1, 2, 3, 5, 8, 7, 1, 1, 1, 4, 6, 1, 1, 1, 1,  /* state = 0 */
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* state = 1 */
+    0, 1, 2, 3, 5, 8, 7, 1, 1, 1, 4, 6, 1, 1, 1, 1,  /* state = 0 = UTF8_ACCEPT */
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* state = 1 = UTF8_REJECT */
     1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1,  /* state = 2 */
     1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1,  /* state = 3 */
     1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1,  /* state = 4 */
@@ -80,7 +83,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
 {
     FILE *fp = NULL;
     uintmax_t offset = 0;
-    unsigned int state = 0;
+    unsigned int state = UTF8_ACCEPT;
     unsigned int codep = 0;
     size_t nbytes = 0;
     size_t nchars = 0;
@@ -113,30 +116,30 @@ static int extract_strings(const char *path, size_t limit, char radix)
         unsigned int ubyte = (unsigned int) byte;
         unsigned int type = utf8d[byte];
         unsigned int bitmask = 0xFFU >> type;
-        codep = (state == 0) ?
+        codep = (state == UTF8_ACCEPT) ?
           (ubyte & bitmask) :
           (ubyte & 0x3FU) | (codep << 6);
         state = utf8t[state * 16 + type];
-        if (state == 0) { /* ACCEPT */
+        if (state == UTF8_ACCEPT) {
             if (!is_printable(codep))
-                state = 1;
+                state = UTF8_REJECT;
         }
-        if (state == 1) { /* REJECT */
+        if (state == UTF8_REJECT) {
             if (nchars >= limit)
                 fputc('\n', stdout);
             nbytes = nchars = 0;
             new = 1;
             codep = ubyte & bitmask;
             state = utf8t[type];
-            if ((state == 0) && !is_printable(codep))
-                state = 1;
+            if ((state == UTF8_ACCEPT) && !is_printable(codep))
+                state = UTF8_REJECT;
         }
-        if (state == 1) { /* still REJECT */
-            state = 0;
+        if (state == UTF8_REJECT) {
+            state = UTF8_ACCEPT;
             continue;
         }
         buffer[nbytes++] = (char) byte;
-        if (state == 0) {
+        if (state == UTF8_ACCEPT) {
             nchars++;
             if (nchars >= limit) {
                 if (new) {
