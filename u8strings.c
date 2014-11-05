@@ -112,9 +112,10 @@ static int extract_strings(const char *path, size_t limit, char radix)
         }
         unsigned int ubyte = (unsigned int) byte;
         unsigned int type = utf8d[byte];
-        codep = (state != 0) ?
-          (ubyte & 0x3FU) | (codep << 6) :
-          (0xFFU >> type) & ubyte;
+        unsigned int bitmask = 0xFFU >> type;
+        codep = (state == 0) ?
+          (ubyte & bitmask) :
+          (ubyte & 0x3FU) | (codep << 6);
         state = utf8t[state * 16 + type];
         if (state == 0) { /* ACCEPT */
             if (!is_printable(codep))
@@ -125,7 +126,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
                 fputc('\n', stdout);
             nbytes = nchars = 0;
             new = 1;
-            codep = (0xFFU >> type) & ubyte;
+            codep = ubyte & bitmask;
             state = utf8t[type];
             if ((state == 0) && !is_printable(codep))
                 state = 1;
