@@ -120,10 +120,8 @@ static int extract_strings(const char *path, size_t limit, char radix)
           (ubyte & bitmask) :
           (ubyte & 0x3FU) | (codep << 6);
         state = utf8t[state * 16 + type];
-        if (state == UTF8_ACCEPT) {
-            if (!is_printable(codep))
-                state = UTF8_REJECT;
-        }
+        if ((state == UTF8_ACCEPT) && !is_printable(codep))
+            state = UTF8_REJECT;
         if (state == UTF8_REJECT) {
             if (nchars >= limit)
                 fputc('\n', stdout);
@@ -132,11 +130,11 @@ static int extract_strings(const char *path, size_t limit, char radix)
             codep = ubyte & bitmask;
             state = utf8t[type];
             if ((state == UTF8_ACCEPT) && !is_printable(codep))
-                state = UTF8_REJECT;
-        }
-        if (state == UTF8_REJECT) {
-            state = UTF8_ACCEPT;
-            continue;
+                continue;
+            if (state == UTF8_REJECT) {
+                state = UTF8_ACCEPT;
+                continue;
+            }
         }
         buffer[nbytes++] = (char) byte;
         if (state == UTF8_ACCEPT) {
