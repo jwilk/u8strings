@@ -1,0 +1,53 @@
+=encoding UTF-8
+
+=head1 NAME
+
+u8strings - print the strings of printable UTF-8 characters in files
+
+=head1 SYNOPSIS
+
+B<strings> [B<-a>] [B<-t> I<format>] [B<-n> I<n>] [I<file>...]
+
+=head1 DESCRIPTION
+
+For each file, B<u8strings> prints the printable character sequences that
+are (by default) at least 4 characters long and
+are followed by an unprintable character.
+
+If no file is specified, the B<u8strings> scans the standard input.
+
+B<u8strings> considers all C0 control characters except I<tab>,
+and all C1 control characters as non-printable.
+All other characters are considered printable.
+
+=head1 OPTIONS
+
+=over
+
+=item B<-a>
+
+This option has no effect.
+It is provided only for compatibility with POSIX.
+
+=item B<-t d>
+
+Print the string offset in decimal.
+
+=item B<-t o>
+
+Print the string offset in octal.
+
+=item B<-t x>
+
+Print the string offset in hexadecimal.
+
+=item B<-n> I<n>
+
+Print strings that are at least I<n> characters long.
+The default is 4.
+
+=back
+
+=head1 SEE ALSO
+
+L<strings(1)>
