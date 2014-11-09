@@ -1,4 +1,4 @@
 syntax: glob
 
-u8strings
 doc/*.1
+u8strings
