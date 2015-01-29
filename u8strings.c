@@ -1,5 +1,5 @@
 /* Copyright © 2008-2009 Bjoern Hoehrmann <bjoern@hoehrmann.de>
- * Copyright © 2014 Jakub Wilk <jwilk@jwilk.net>
+ * Copyright © 2014-2015 Jakub Wilk <jwilk@jwilk.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the “Software”), to
@@ -171,6 +171,21 @@ error:
     return 1;
 }
 
+void flush_stdout(void)
+{
+    int rc;
+    if (ferror(stdout)) {
+        fclose(stdout);
+        rc = EOF;
+        errno = EIO;
+    } else
+        rc = fclose(stdout);
+    if (rc == EOF) {
+        fprintf(stderr, "%s: %s\n", progname, strerror(errno));
+        exit(1);
+    }
+}
+
 int main(int argc, char **argv)
 {
     int opt;
@@ -227,10 +242,7 @@ int main(int argc, char **argv)
     if (optind >= argc) {
         rc |= extract_strings(NULL, (size_t) limit, radix);
     }
-    if (fclose(stdout) == EOF) {
-        fprintf(stderr, "%s: %s\n", progname, strerror(errno));
-        exit(1);
-    }
+    flush_stdout();
     return rc;
 }
 
