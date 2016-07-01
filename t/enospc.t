@@ -20,10 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+no lib '.';
+
 use strict;
 use warnings;
 use v5.10;
-no lib '.';
 
 use FindBin ();
 use Test::More tests => 4;
