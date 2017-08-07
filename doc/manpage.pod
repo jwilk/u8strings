@@ -6,7 +6,7 @@ u8strings - print the strings of printable UTF-8 characters in files
 
 =head1 SYNOPSIS
 
-B<strings> [B<-a>] [B<-t> I<format>] [B<-n> I<n>] [I<file>...]
+B<u8strings> [B<-a>] [B<-t> I<format>] [B<-n> I<n>] [I<file>...]
 
 =head1 DESCRIPTION
 
