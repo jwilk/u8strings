@@ -186,10 +186,6 @@ void flush_stdout(void)
     }
 }
 
-#ifdef __AFL_HAVE_MANUAL_INIT
-void __afl_manual_init(void);
-#endif
-
 int main(int argc, char **argv)
 {
     int opt;
@@ -240,11 +236,11 @@ int main(int argc, char **argv)
     }
     int i;
     int rc = 0;
-#ifdef __AFL_HAVE_MANUAL_INIT
+#ifdef __AFL_HAVE_MANUAL_CONTROL
     /* Support for American fuzzy lop deferred forkserver:
      * http://lcamtuf.coredump.cx/afl/
      */
-    __afl_manual_init();
+    __AFL_INIT();
 #endif
     for (i = optind; i < argc; i++) {
         rc |= extract_strings(argv[i], (size_t) limit, radix);
