@@ -79,7 +79,7 @@ static int is_printable(unsigned int codep)
     return 1;
 }
 
-static int extract_strings(const char *path, size_t limit, char radix)
+static int extract_strings(const char *path, size_t limit, char radix, int show_path)
 {
     FILE *fp = NULL;
     uintmax_t offset = 0;
@@ -147,6 +147,8 @@ static int extract_strings(const char *path, size_t limit, char radix)
             if (nchars >= limit) {
                 if (new) {
                     new = 0;
+                    if (show_path)
+                        printf("%s: ", path);
                     if (radix)
                         printf(format, offset - nbytes);
                 }
@@ -173,11 +175,15 @@ error:
 int main(int argc, char **argv)
 {
     int opt;
+    int show_path = 0;
     long limit = 4;
     char radix = '\0';
-    while ((opt = getopt(argc, argv, "an:t:")) != -1)
+    while ((opt = getopt(argc, argv, "afn:t:")) != -1)
     switch (opt) {
         case 'a':
+            break;
+        case 'f':
+            show_path = 1;
             break;
         case 'n': {
             char *endptr;
@@ -221,10 +227,20 @@ int main(int argc, char **argv)
     int i;
     int rc = 0;
     for (i = optind; i < argc; i++) {
-        rc |= extract_strings(argv[i], (size_t) limit, radix);
+        rc |= extract_strings(
+            argv[i],
+            (size_t) limit,
+            radix,
+            show_path
+        );
     }
     if (optind >= argc) {
-        rc |= extract_strings(NULL, (size_t) limit, radix);
+        rc |= extract_strings(
+            NULL,
+            (size_t) limit,
+            radix,
+            show_path
+        );
     }
     if (fclose(stdout) == EOF) {
         fprintf(stderr, "%s: %s\n", progname, strerror(errno));
