@@ -1,6 +1,6 @@
 u8strings (0.1.2) UNRELEASED; urgency=low
 
-  * Automatically enable American fuzzy lop deferred forkserver.
+  * Automatically enable American Fuzzy Lop deferred forkserver.
   * Use LFS_LDFLAGS in addition to LFS_CFLAGS.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Thu, 10 Dec 2015 15:12:09 +0100

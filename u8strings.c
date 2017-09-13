@@ -237,7 +237,7 @@ int main(int argc, char **argv)
     int i;
     int rc = 0;
 #ifdef __AFL_HAVE_MANUAL_CONTROL
-    /* Support for American fuzzy lop deferred forkserver:
+    /* Support for American Fuzzy Lop deferred forkserver:
      * http://lcamtuf.coredump.cx/afl/
      */
     __AFL_INIT();
