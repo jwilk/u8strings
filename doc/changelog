@@ -2,8 +2,8 @@ u8strings (0.1.2) UNRELEASED; urgency=low
 
   * Automatically enable American Fuzzy Lop deferred forkserver.
   * Improve the build system:
-    + Add install target.
-    + Add test target.
+    + Add “install” target.
+    + Add “test” target.
     + Don't use getconf(1) to acquire LFS build flags.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Wed, 08 Nov 2017 18:42:52 +0100
