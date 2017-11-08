@@ -10,6 +10,6 @@ addons:
     - libipc-run-perl
 script:
 - make
-- prove -v
+- make test
 
 # vim:ts=2 sts=2 sw=2 et
