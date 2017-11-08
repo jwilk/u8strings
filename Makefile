@@ -5,6 +5,10 @@ CFLAGS += -D_FILE_OFFSET_BITS=64
 .PHONY: all
 all: u8strings
 
+.PHONY: test
+test: u8strings
+	prove -v
+
 .PHONY: clean
 clean:
 	rm -f u8strings
