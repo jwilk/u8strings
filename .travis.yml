@@ -11,5 +11,11 @@ addons:
 script:
 - make
 - make test
+- make -C doc
+- make install PREFIX=~/.local
+- export PATH=~/.local/bin:"$PATH"
+- u8strings /dev/null
+- export MANPATH=~/.local/share/man MANWIDTH=80
+- man 1 u8strings | grep -A 10 -w U8STRINGS
 
 # vim:ts=2 sts=2 sw=2 et
