@@ -34,7 +34,7 @@ use IPC::Run ();
 my $cmd = $ENV{U8STRINGS} // "$FindBin::Bin/../u8strings";
 
 my ($stdout, $stderr);
-my $stdin = "\xc2foobar\0";
+my $stdin = "\xC2foobar\0";
 my $cli = IPC::Run::start(
     [$cmd],
     '<', \$stdin,
