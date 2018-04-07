@@ -9,7 +9,7 @@ all: u8strings
 install: u8strings
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m755 $(<) $(DESTDIR)$(PREFIX)/bin/$(<)
-ifeq "$(wildcard .git doc/u8strings.1)" ".git"
+ifeq "$(wildcard doc/u8strings.1)" ""
 	# run "$(MAKE) -C doc" to build the manpage
 else
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
