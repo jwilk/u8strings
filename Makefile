@@ -44,4 +44,6 @@ test: u8strings
 clean:
 	rm -f u8strings
 
+.error = GNU make is required
+
 # vim:ts=4 sts=4 sw=4 noet
