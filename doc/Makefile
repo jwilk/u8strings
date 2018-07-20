@@ -9,6 +9,10 @@ u8strings.1: manpage.pod
 	> $(@).tmp
 	mv $(@).tmp $(@)
 
+.PHONY: test check
+test check: manpage.pod
+	podchecker -warnings -warnings $(<)
+
 .PHONY: clean
 clean:
 	rm -f *.1 *.tmp
