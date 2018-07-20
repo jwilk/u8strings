@@ -4,7 +4,7 @@ version = $(shell head -n1 changelog | cut -d ' ' -f2 | tr -d '()')
 all: u8strings.1
 
 u8strings.1: manpage.pod
-	sed -e 's/L<\([a-z_-]\+\)(\([0-9]\+\))>/B<\1>(\2)/' $(<) \
+	perl -p -e 's/L<([a-z_-]+)[(]([0-9]+)[)]>/B<\1>(\2)/g' $(<) \
 	| pod2man --utf8 -c '' -n U8STRINGS -r 'u8strings $(version)' \
 	> $(@).tmp
 	mv $(@).tmp $(@)
