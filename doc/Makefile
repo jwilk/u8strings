@@ -1,4 +1,4 @@
-version = $(shell head -n1 changelog | cut -d ' ' -f2 | tr -d '()')
+version = $(shell IFS='()' read _ v _ < changelog && echo $$v)
 
 .PHONY: all
 all: u8strings.1
