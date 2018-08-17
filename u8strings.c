@@ -29,7 +29,7 @@
 #include <string.h>
 #include <unistd.h>
 
-const char * progname = "u8strings";
+static const char * progname = "u8strings";
 
 /* Flexible and Economical UTF-8 Decoder
  * http://bjoern.hoehrmann.de/utf-8/decoder/dfa/
@@ -171,7 +171,7 @@ error:
     return 1;
 }
 
-void flush_stdout(void)
+static void flush_stdout(void)
 {
     int rc;
     if (ferror(stdout)) {
