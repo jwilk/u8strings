@@ -25,18 +25,21 @@ CFLAGS += -D_FILE_OFFSET_BITS=64
 PREFIX = /usr/local
 DESTDIR =
 
+bindir = $(PREFIX)/bin
+mandir = $(PREFIX)/share/man
+
 .PHONY: all
 all: u8strings
 
 .PHONY: install
 install: u8strings
-	install -d $(DESTDIR)$(PREFIX)/bin
-	install -m755 $(<) $(DESTDIR)$(PREFIX)/bin/$(<)
+	install -d $(DESTDIR)$(bindir)
+	install -m755 $(<) $(DESTDIR)$(bindir)/
 ifeq "$(wildcard doc/u8strings.1)" ""
 	# run "$(MAKE) -C doc" to build the manpage
 else
-	install -d $(DESTDIR)$(PREFIX)/share/man/man1
-	install -m644 doc/u8strings.1 $(DESTDIR)$(PREFIX)/share/man/man1/u8strings.1
+	install -d $(DESTDIR)$(mandir)/man1
+	install -m644 doc/u8strings.1 $(DESTDIR)$(mandir)/man1/
 endif
 
 .PHONY: test
