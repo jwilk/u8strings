@@ -46,6 +46,10 @@ endif
 test: u8strings
 	prove -v
 
+.PHONY: test-installed
+test-installed: $(or $(shell command -v u8strings;),$(bindir)/u8strings)
+	U8STRINGS=u8strings prove -v
+
 .PHONY: clean
 clean:
 	rm -f u8strings
