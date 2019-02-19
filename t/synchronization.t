@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # Copyright © 2014-2018 Jakub Wilk <jwilk@jwilk.net>
 #
