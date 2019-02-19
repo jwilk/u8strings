@@ -8,7 +8,6 @@ addons:
     packages:
     - libipc-run-perl
 script:
-- dpkg-parsechangelog -ldoc/changelog --all 2>&1 >/dev/null | { ! grep .; }
 - make
 - make test
 - make -C doc
