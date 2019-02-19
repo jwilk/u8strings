@@ -1,4 +1,4 @@
-u8strings (0.1.3) UNRELEASED; urgency=low
+u8strings (0.1.3) unstable; urgency=low
 
   * Improve the build system:
     + Set default PREFIX and DESTDIR.
@@ -9,7 +9,7 @@ u8strings (0.1.3) UNRELEASED; urgency=low
     + Don't hardcode the Perl interpreter path in script shebang;
       use “#!/usr/bin/env perl” instead.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 19 Feb 2019 20:38:23 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 19 Feb 2019 20:46:21 +0100
 
 u8strings (0.1.2) unstable; urgency=low
 
