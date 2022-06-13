@@ -104,7 +104,7 @@ static int extract_strings(const char *path, size_t limit, char radix)
     format[2] = radix;
     offset = 0;
     while (1) {
-        if (radix && ++offset == 0) {
+        if (radix && ++offset == 0U) {
             errno = EFBIG;
             goto error;
         }
