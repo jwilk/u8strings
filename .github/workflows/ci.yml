@@ -44,7 +44,7 @@ jobs:
         make test-installed
         cd /
         u8strings '/dev/null'
-        export MANPATH=/home/runner/.local/share/man MANWIDTH=80
+        export MANPATH=~/.local/share/man MANWIDTH=80
         man 1 u8strings | grep -A 10 -w U8STRINGS
     - name: run cppcheck
       if: matrix.cc == 'gcc'
