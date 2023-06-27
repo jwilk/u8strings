@@ -23,7 +23,7 @@ version = $(shell IFS='()' read _ v _ < changelog && echo $$v)
 .PHONY: all
 all: u8strings.1
 
-u8strings.1: manpage.pod
+u8strings.1: manpage.pod changelog
 	perl -p -e 's/L<([a-z_-]+)[(]([0-9]+)[)]>/B<\1>(\2)/g' $(<) \
 	| pod2man --utf8 -c '' -n U8STRINGS -r 'u8strings $(version)' \
 	> $(@).tmp
