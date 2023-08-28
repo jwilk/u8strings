@@ -49,8 +49,7 @@ git archive "$commit" --prefix="$name-$version/" | tar -C "$sourceroot" -xf -
 cd "$sourceroot"/*
 mv LICENSE doc/
 make -C doc/
-rm .git*
-rm .travis.yml
+rm -r .git*
 rm private/build-source-tarball
 find . -empty -delete
 cd ..
