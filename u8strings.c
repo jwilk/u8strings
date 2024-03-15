@@ -191,6 +191,8 @@ int main(int argc, char **argv)
     int opt;
     long limit = 4;
     char radix = '\0';
+    /* TODO: add -h, --help */
+    /* TODO: add --version */
     while ((opt = getopt(argc, argv, "an:t:")) != -1)
     switch (opt) {
         case 'a':
