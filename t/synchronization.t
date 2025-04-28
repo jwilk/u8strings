@@ -35,6 +35,7 @@ my $cmd = $ENV{U8STRINGS} // "$FindBin::Bin/../u8strings";
 
 my ($stdout, $stderr);
 my $stdin = "\xC2foobar\0";
+local $SIG{CHLD} = sub { };
 my $cli = IPC::Run::start(
     [$cmd],
     '<', \$stdin,

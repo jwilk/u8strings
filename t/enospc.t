@@ -37,6 +37,7 @@ my $stderr;
 
 open(my $dev_full, '>', '/dev/full') or die $!;
 
+local $SIG{CHLD} = sub { };
 my $cli = IPC::Run::start(
     [$cmd],
     '<', \"foobar\n",
